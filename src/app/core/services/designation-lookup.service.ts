@@ -4,14 +4,13 @@ import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { DesignationLookupApi, DesignationLookupOption } from '../models/designation-lookup.model';
+import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class DesignationLookupService {
-  private readonly http = inject(HttpClient);
+ private readonly api = inject(ApiService);
 
-  private readonly designationListUrl = `${environment.apiBaseUrl}/api/centralizedAPI/SOPDesignation`;
-
-  private readonly tenantId = environment.tenantId;
+ private readonly tenantId = environment.tenantId;
 
   // Designation lookup data is shared across many forms, so cache the first API response.
   private readonly designations$ = this.loadDesignations().pipe(
@@ -24,12 +23,11 @@ export class DesignationLookupService {
   }
 
   private loadDesignations(): Observable<DesignationLookupOption[]> {
-    const params = new HttpParams().set('tenantId', this.tenantId);
-
-    return this.http
+     
+    return this.api
       .get<DesignationLookupApi[] | { data?: DesignationLookupApi[]; Data?: DesignationLookupApi[] }>(
-        this.designationListUrl,
-        { params },
+        '/api/centralizedAPI/SOPDesignation',
+        {params: { tenantId: this.tenantId }},
       )
       .pipe(
         map((response) => {

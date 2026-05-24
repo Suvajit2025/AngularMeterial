@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
 // It only hosts the router outlet because the shell layout is loaded by routing.
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

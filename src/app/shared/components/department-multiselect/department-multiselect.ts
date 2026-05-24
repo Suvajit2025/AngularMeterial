@@ -8,6 +8,7 @@ import { DepartmentLookupService } from '../../../core/services/department-looku
 
 @Component({
   selector: 'app-department-multiselect',
+  standalone: true,
   imports: [FormsModule, MultiSelectModule],
   templateUrl: './department-multiselect.html',
   styleUrl: './department-multiselect.scss',

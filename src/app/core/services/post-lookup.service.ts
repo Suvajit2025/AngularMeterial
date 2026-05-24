@@ -4,13 +4,11 @@ import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { PostLookupApi, PostLookupOption } from '../models/post-lookup.model';
-
+import { ApiService } from './api.service';
 @Injectable({ providedIn: 'root' })
 export class PostLookupService {
-  private readonly http = inject(HttpClient);
-
-  private readonly postListUrl = `${environment.apiBaseUrl}/api/centralizedAPI/SOPPostList`;
-
+  private readonly api = inject(ApiService);
+ 
   private readonly tenantId = environment.tenantId;
 
   // Post lookup data is shared across forms, so cache the first API response.
@@ -22,12 +20,11 @@ export class PostLookupService {
   }
 
   private loadPosts(): Observable<PostLookupOption[]> {
-    const params = new HttpParams().set('tenantId', this.tenantId);
-
-    return this.http
+    
+    return this.api
       .get<PostLookupApi[] | { data?: PostLookupApi[]; Data?: PostLookupApi[] }>(
-        this.postListUrl,
-        { params },
+        '/api/centralizedAPI/SOPPostList',
+        { params: { tenantId: this.tenantId } },
       )
       .pipe(
         map((response) => {

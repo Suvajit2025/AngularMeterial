@@ -8,6 +8,7 @@ import { EmployeeLookupService } from '../../../core/services/employee-lookup.se
 
 @Component({
   selector: 'app-employee-virtual-multiselect',
+  standalone: true,
   imports: [FormsModule, MultiSelectModule],
   templateUrl: './employee-virtual-multiselect.html',
   styleUrl: './employee-virtual-multiselect.scss',

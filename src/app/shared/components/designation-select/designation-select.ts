@@ -8,6 +8,7 @@ import { DesignationLookupService } from '../../../core/services/designation-loo
 
 @Component({
   selector: 'app-designation-select',
+  standalone: true,
   imports: [FormsModule, SelectModule],
   templateUrl: './designation-select.html',
   styleUrl: './designation-select.scss',

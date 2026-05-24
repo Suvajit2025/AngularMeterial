@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 // Shared components are UI pieces that multiple features can use.
 @Component({
   selector: 'app-empty-state',
+  standalone: true,
   imports: [MatIconModule],
   templateUrl: './empty-state.html',
   styleUrl: './empty-state.scss',

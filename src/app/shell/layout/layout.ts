@@ -12,6 +12,7 @@ import { SidebarComponent } from '../sidebar/sidebar';
 // It owns responsive sidebar behavior and hosts all feature pages through router-outlet.
 @Component({
   selector: 'app-layout',
+  standalone: true,
   imports: [FooterComponent, HeaderComponent, RouterOutlet, SidebarComponent],
   templateUrl: './layout.html',
   styleUrl: './layout.scss',

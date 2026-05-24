@@ -1,11 +1,58 @@
+import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
 
 import { LayoutComponent } from './shell/layout/layout';
+import { MenuItem } from './shell/models/menu-item.model';
+import { ENTERPRISE_MENU_ITEMS } from './shell/models/menu.mock';
+
+type MenuComponentLoader = () => Promise<Type<unknown>>;
+
+const implementedMenuComponents: Partial<Record<string, MenuComponentLoader>> = {
+  dashboard: () =>
+    import('./features/dashboard/dashboard').then((component) => component.DashboardComponent),
+  'organization/org-chart': () =>
+    import('./features/organization/org-chart/org-chart').then(
+      (component) => component.OrgChartComponent,
+    ),
+};
+
+function normalizeRoutePath(route: string): string {
+  return route.replace(/^\/+|\/+$/g, '');
+}
+
+function createRoutesFromMenu(items: MenuItem[], parentTitle = ''): Routes {
+  return items.flatMap((item) => {
+    const routes: Routes = [];
+
+    if (!item.hidden && item.route) {
+      const path = normalizeRoutePath(item.route);
+      const loadComponent = implementedMenuComponents[path];
+
+      if (path && loadComponent) {
+        routes.push({
+          path,
+          loadComponent,
+          data: {
+            icon: item.icon,
+            section: parentTitle,
+            title: item.title,
+          },
+        });
+      }
+    }
+
+    if (!item.hidden && item.children?.length) {
+      routes.push(...createRoutesFromMenu(item.children, item.title));
+    }
+
+    return routes;
+  });
+}
 
 // Enterprise routing structure:
 // - The shell layout is loaded once at the root.
-// - Feature pages are loaded inside the shell through child routes.
-// - loadComponent keeps the dashboard lazy-load-ready without NgModules.
+// - Sidebar leaf routes are generated from menu data so navigation stays in one source.
+// - Implemented menu pages are lazy loaded; unfinished pages use a shared placeholder.
 export const routes: Routes = [
   {
     path: '',
@@ -16,16 +63,7 @@ export const routes: Routes = [
         pathMatch: 'full',
         redirectTo: 'dashboard',
       },
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('./features/dashboard/dashboard').then((component) => component.DashboardComponent),
-      },
-      {
-        path: 'organization',
-        loadChildren: () =>
-          import('./features/organization/organization.routes').then((feature) => feature.organizationRoutes),
-      },
+      ...createRoutesFromMenu(ENTERPRISE_MENU_ITEMS),
     ],
   },
   {

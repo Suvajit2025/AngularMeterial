@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 
@@ -11,8 +11,8 @@ export class ApiService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = environment.apiBaseUrl;
 
-  get<T>(url: string): Observable<T> {
-    return this.http.get<T>(this.buildUrl(url)).pipe(catchError(this.handleError));
+  get<T>(url: string, options?: { params?: HttpParams | Record<string, string> }): Observable<T> {
+    return this.http.get<T>(this.buildUrl(url), options).pipe(catchError(this.handleError));
   }
 
   post<T>(url: string, body: unknown): Observable<T> {

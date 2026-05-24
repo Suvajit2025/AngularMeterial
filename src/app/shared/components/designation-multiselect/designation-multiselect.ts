@@ -8,6 +8,7 @@ import { DesignationLookupService } from '../../../core/services/designation-loo
 
 @Component({
   selector: 'app-designation-multiselect',
+  standalone: true,
   imports: [FormsModule, MultiSelectModule],
   templateUrl: './designation-multiselect.html',
   styleUrl: './designation-multiselect.scss',

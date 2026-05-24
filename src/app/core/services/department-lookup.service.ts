@@ -1,15 +1,13 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { DepartmentLookupApi, DepartmentLookupOption } from '../models/department-lookup.model';
+import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class DepartmentLookupService {
-  private readonly http = inject(HttpClient);
-
-  private readonly departmentListUrl = `${environment.apiBaseUrl}/api/centralizedAPI/DepartmentList`;
+  private readonly api = inject(ApiService);
 
   private readonly tenantId = environment.tenantId;
 
@@ -24,12 +22,10 @@ export class DepartmentLookupService {
   }
 
   private loadDepartments(): Observable<DepartmentLookupOption[]> {
-    const params = new HttpParams().set('tenantId', this.tenantId);
-
-    return this.http
+    return this.api
       .get<DepartmentLookupApi[] | { data?: DepartmentLookupApi[]; Data?: DepartmentLookupApi[] }>(
-        this.departmentListUrl,
-        { params },
+        '/api/centralizedAPI/DepartmentList',
+        { params: { tenantId: this.tenantId } },
       )
       .pipe(
         map((response) => {

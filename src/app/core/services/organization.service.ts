@@ -5,24 +5,19 @@ import { Observable, catchError, delay, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Employee } from '../../features/organization/models/employee.model';
 import { ORGANIZATION_MENU_MOCK } from '../../features/organization/models/menu.mock';
-
+import{ApiService} from './api.service';
 // OrganizationService is API-ready.
 // Today it returns mock data; later this method can call ApiService or HttpClient.
 @Injectable({
   providedIn: 'root',
 })
 export class OrganizationService {
-  private readonly http = inject(HttpClient);
-
+  private readonly api= inject(ApiService);
   // The API is searched from this employee, so returned employees normally belong under this manager.
   readonly searchedEmployeeNo = '100471';
 
   // The chart should still show the company top level before the searched employee subtree.
-  readonly rootEmployeeNo = '100003';
-
-  private readonly organizationHierarchyUrl =
-    `${environment.apiBaseUrl}/api/essp-admin/organization-hierarchy`;
-
+  readonly rootEmployeeNo = '100003'; 
   private readonly tenantId = environment.tenantId;
 
   // Mock employee hierarchy data comes from menu.mock.ts.
@@ -58,8 +53,8 @@ export class OrganizationService {
       .set('empNo', this.searchedEmployeeNo)
       .set('action', 'TOPTOBOTTOM');
 
-    return this.http.get<Employee[] | { data?: Employee[]; Data?: Employee[]; result?: Employee[] }>(
-      this.organizationHierarchyUrl,
+    return this.api.get<Employee[] | { data?: Employee[]; Data?: Employee[]; result?: Employee[] }>(
+      '/api/essp-admin/organization-hierarchy',
       { params },
     ).pipe(
       // Some APIs return a plain array, others wrap the array in data/Data/result.

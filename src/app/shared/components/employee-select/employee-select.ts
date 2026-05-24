@@ -8,6 +8,7 @@ import { EmployeeLookupService } from '../../../core/services/employee-lookup.se
 
 @Component({
   selector: 'app-employee-select',
+  standalone: true,
   imports: [FormsModule, SelectModule],
   templateUrl: './employee-select.html',
   styleUrl: './employee-select.scss',

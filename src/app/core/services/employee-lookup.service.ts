@@ -4,13 +4,11 @@ import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { EmployeeLookupApi, EmployeeLookupOption } from '../models/employee-lookup.model';
+import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeLookupService {
-  private readonly http = inject(HttpClient);
-
-  private readonly employeeListUrl = `${environment.apiBaseUrl}/api/centralizedAPI/EmployeeList`;
-
+  private readonly api = inject(ApiService);
   private readonly tenantId = environment.tenantId;
 
   // shareReplay caches the employee list after the first API call.
@@ -23,12 +21,11 @@ export class EmployeeLookupService {
   }
 
   private loadEmployees(): Observable<EmployeeLookupOption[]> {
-    const params = new HttpParams().set('tenantId', this.tenantId);
-
-    return this.http
+     
+    return this.api
       .get<EmployeeLookupApi[] | { data?: EmployeeLookupApi[]; Data?: EmployeeLookupApi[] }>(
-        this.employeeListUrl,
-        { params },
+        '/api/centralizedAPI/EmployeeList',
+        { params: { tenantId: this.tenantId } },
       )
       .pipe(
         map((response) => {

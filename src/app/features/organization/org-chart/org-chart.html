@@ -64,24 +64,17 @@
   <section class="chart-panel screenshot-style">
     <!-- Chart toolbar contains search, zoom, and expand/collapse controls. -->
     <div class="chart-toolbar">
-      <mat-form-field appearance="outline" class="employee-search">
-        <mat-icon matPrefix>search</mat-icon>
-        <input
-          matInput
-          type="search"
-          [ngModel]="searchTerm()"
-          (ngModelChange)="updateSearch($event)"
-          placeholder="Search employee, designation, or code"
-        />
-      </mat-form-field>
-
+      <div class="chart-employee-select">
+        <app-employee-select (employeeSelected)="selectEmployee($event)" />
+      </div>
+     
       <div class="chart-actions" aria-label="Organization chart actions">
         <button mat-icon-button type="button" (click)="zoomOut()" matTooltip="Zoom out">
           <mat-icon>remove</mat-icon>
         </button>
 
         <button mat-stroked-button type="button" (click)="resetZoom()">
-          {{ (zoomLevel() * 100).toFixed(0) }}%
+          {{ zoomDisplay() }}%
         </button>
 
         <button mat-icon-button type="button" (click)="zoomIn()" matTooltip="Zoom in">

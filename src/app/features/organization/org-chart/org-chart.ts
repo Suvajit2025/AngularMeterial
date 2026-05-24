@@ -9,13 +9,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { catchError, finalize, of } from 'rxjs';
 
+import { EmployeeLookupOption } from '../../../core/models/employee-lookup.model';
 import { OrganizationService } from '../../../core/services/organization.service';
+import { EmployeeSelectComponent } from '../../../shared/components/employee-select/employee-select';
 import { Employee, OrganizationNodeData, OrganizationTreeNode } from '../models/employee.model';
 
 // OrgChartComponent is a standalone lazy-loaded feature page.
 // It uses a custom horizontal recursive renderer so the chart matches classic HRMS org-chart layouts.
 @Component({
   selector: 'app-org-chart',
+  standalone: true,
   imports: [
     FormsModule,
     MatButtonModule,
@@ -24,12 +27,14 @@ import { Employee, OrganizationNodeData, OrganizationTreeNode } from '../models/
     MatInputModule,
     MatTooltipModule,
     NgTemplateOutlet,
+    EmployeeSelectComponent,
   ],
   templateUrl: './org-chart.html',
   styleUrl: './org-chart.scss',
 })
 export class OrgChartComponent {
   private readonly organizationService = inject(OrganizationService);
+  private readonly defaultZoomLevel = 0.8;
 
   // Signal query gives us the chart DOM area that should be captured for PDF export.
   protected readonly exportArea = viewChild<ElementRef<HTMLElement>>('exportArea');
@@ -41,7 +46,7 @@ export class OrgChartComponent {
   protected readonly exporting = signal(false);
 
   // Signal used for zoom state. The chart uses CSS transform so the data does not change.
-  protected readonly zoomLevel = signal(1);
+  protected readonly zoomLevel = signal(this.defaultZoomLevel);
 
   // Signal used by the search input to highlight matching employees.
   protected readonly searchTerm = signal('');
@@ -84,10 +89,18 @@ export class OrgChartComponent {
 
   protected readonly chartScale = computed(() => `scale(${this.zoomLevel()})`);
 
+  readonly zoomDisplay = computed(() =>
+    ((this.zoomLevel() / this.defaultZoomLevel) * 100).toFixed(0),
+  );
+
   protected readonly treeDepth = computed(() => this.getTreeDepth(this.organizationNodes()));
 
   protected updateSearch(value: string): void {
     this.searchTerm.set(value);
+  }
+
+  protected selectEmployee(employee: EmployeeLookupOption | null): void {
+    this.searchTerm.set(employee?.label ?? '');
   }
 
   protected zoomIn(): void {
@@ -99,7 +112,7 @@ export class OrgChartComponent {
   }
 
   protected resetZoom(): void {
-    this.zoomLevel.set(1);
+    this.zoomLevel.set(this.defaultZoomLevel);
   }
 
   protected expandAll(): void {

@@ -12,6 +12,7 @@ import { MenuItem } from '../models/menu-item.model';
 // This is easier to understand and avoids nested tree alignment problems for beginners.
 @Component({
   selector: 'app-sidebar',
+  standalone: true,
   imports: [
     NgTemplateOutlet,
     MatButtonModule,

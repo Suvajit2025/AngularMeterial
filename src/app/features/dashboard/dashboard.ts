@@ -36,6 +36,7 @@ interface WorkflowItem {
 // It demonstrates Signals for local page state and Material table/card-style UI.
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [
     DepartmentMultiselectComponent,
     DepartmentSelectComponent,

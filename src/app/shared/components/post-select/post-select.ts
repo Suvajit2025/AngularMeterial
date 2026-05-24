@@ -8,6 +8,7 @@ import { PostLookupService } from '../../../core/services/post-lookup.service';
 
 @Component({
   selector: 'app-post-select',
+  standalone: true,
   imports: [FormsModule, SelectModule],
   templateUrl: './post-select.html',
   styleUrl: './post-select.scss',
