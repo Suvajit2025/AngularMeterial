@@ -1,0 +1,47 @@
+<!--
+  App layout uses plain flexbox for desktop/tablet.
+  This avoids hardcoded margin-left values and lets the header/content fill remaining width.
+-->
+<div
+  class="app-layout"
+  [class.sidebar-collapsed]="isCollapsed() && !isMobile()"
+  [class.mobile-layout]="isMobile()"
+  [class.mobile-sidebar-open]="isMobile() && !isCollapsed()"
+>
+  <!-- Fixed sidebar. Width changes from 260px to 72px on desktop collapse. -->
+  <app-sidebar
+    class="layout-sidebar"
+    [class.mobile-sidebar]="isMobile()"
+    [class.mobile-open]="isMobile() && !isCollapsed()"
+    [collapsed]="isCollapsed() && !isMobile()"
+  />
+
+  @if (isMobile() && !isCollapsed()) {
+    <!-- Mobile backdrop closes the drawer-style sidebar. -->
+    <button
+      type="button"
+      class="mobile-backdrop"
+      aria-label="Close navigation"
+      (click)="toggleSidebar()"
+    ></button>
+  }
+
+  <!--
+    flex: 1 makes the main container consume all remaining horizontal space.
+    min-width: 0 prevents wide child content from forcing horizontal overflow.
+  -->
+  <div class="main-container">
+    <app-header
+      class="shell-header"
+      [sidebarCollapsed]="isCollapsed()"
+      (sidebarToggle)="toggleSidebar()"
+    />
+
+    <!-- Main router outlet where feature pages load dynamically. -->
+    <main class="content-area bg-slate-50">
+      <router-outlet />
+    </main>
+
+    <app-footer />
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<p-multiselect
+  [options]="departments()"
+  [ngModel]="selectedDepartments()"
+  (ngModelChange)="selectDepartments($event)"
+  optionLabel="name"
+  dataKey="departmentId"
+  placeholder="Select departments"
+  filterPlaceHolder="Search department"
+  filterBy="name,departmentId"
+  emptyMessage="No department found"
+  emptyFilterMessage="No department found"
+  selectedItemsLabel="{0} departments selected"
+  scrollHeight="300px"
+  appendTo="body"
+  display="chip"
+  styleClass="department-prime-multiselect"
+  panelStyleClass="department-prime-multiselect-panel"
+  [filter]="true"
+  [showClear]="true"
+  [showToggleAll]="true"
+  [maxSelectedLabels]="3"
+  [virtualScroll]="true"
+  [virtualScrollItemSize]="48"
+>
+  <ng-template pTemplate="item" let-department>
+    <span class="department-option">
+      <span class="department-icon">{{ department.name.charAt(0) }}</span>
+      <span class="department-option-copy">
+        <strong>{{ department.name }}</strong>
+        <small>ID: {{ department.departmentId }}</small>
+      </span>
+    </span>
+  </ng-template>
+</p-multiselect>

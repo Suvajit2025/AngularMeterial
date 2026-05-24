@@ -1,0 +1,82 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: #f3f6fb;
+}
+
+.layout-sidebar {
+  flex: 0 0 260px;
+  width: 260px;
+  height: 100vh;
+  overflow: hidden;
+  transition:
+    flex-basis 240ms ease,
+    width 240ms ease;
+}
+
+.sidebar-collapsed .layout-sidebar {
+  flex-basis: 72px;
+  width: 72px;
+}
+
+.main-container {
+  flex: 1;
+  display: flex;
+  min-width: 0; /* Prevent content overflow inside flex layout */
+  height: 100vh;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f3f6fb;
+}
+
+.shell-header {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.content-area {
+  flex: 1;
+  min-width: 0; /* Allows dashboard grids/tables to shrink inside the available space */
+  overflow: auto;
+  padding: 22px 24px;
+}
+
+.mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  border: 0;
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.mobile-sidebar {
+  position: fixed;
+  z-index: 40;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.mobile-sidebar.mobile-open {
+  transform: translateX(0);
+}
+
+@media (max-width: 767px) {
+  .layout-sidebar {
+    flex-basis: 260px;
+    width: 260px;
+  }
+
+  .content-area {
+    padding: 16px;
+  }
+}

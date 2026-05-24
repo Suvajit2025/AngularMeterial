@@ -1,0 +1,38 @@
+<p-select
+  [options]="posts()"
+  [ngModel]="selectedPost()"
+  (ngModelChange)="selectPost($event)"
+  optionLabel="name"
+  dataKey="postId"
+  placeholder="Select post"
+  filterPlaceholder="Search post"
+  filterBy="name,postId"
+  emptyMessage="No post found"
+  emptyFilterMessage="No post found"
+  appendTo="body"
+  styleClass="post-prime-select"
+  panelStyleClass="post-prime-panel"
+  [filter]="true"
+  [showClear]="true"
+  [virtualScroll]="true"
+  [virtualScrollItemSize]="44"
+>
+  <ng-template pTemplate="selectedItem" let-post>
+    @if (post) {
+      <span class="post-selected-value">
+        <span class="post-icon">{{ post.name.charAt(0) }}</span>
+        <span>{{ post.name }}</span>
+      </span>
+    }
+  </ng-template>
+
+  <ng-template pTemplate="item" let-post>
+    <span class="post-option">
+      <span class="post-icon">{{ post.name.charAt(0) }}</span>
+      <span class="post-option-copy">
+        <strong>{{ post.name }}</strong>
+        <small>ID: {{ post.postId }}</small>
+      </span>
+    </span>
+  </ng-template>
+</p-select>

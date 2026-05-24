@@ -1,0 +1,77 @@
+:host {
+  display: block;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+:host ::ng-deep .designation-prime-multiselect {
+  min-height: 46px;
+  width: 100%;
+}
+
+:host ::ng-deep .designation-prime-multiselect.p-multiselect {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-color: #cbd5e1;
+  border-radius: 12px;
+  box-shadow:
+    0 10px 20px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.designation-option {
+  align-items: center;
+  display: flex;
+  gap: 2px;
+  min-width: 0;
+}
+
+.designation-icon {
+  align-items: center;
+  background: #ecfdf5;
+  border-radius: 9px;
+  color: #047857;
+  display: inline-flex;
+  flex: 0 0 32px;
+  font-size: 13px;
+  font-weight: 500;
+  height: 32px;
+  justify-content: center;
+  text-transform: uppercase;
+  width: 32px;
+}
+
+.designation-option-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.designation-option-copy strong,
+.designation-option-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.designation-option-copy strong {
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.designation-option-copy small {
+  color: #64748b;
+  font-size: 10px;
+}
+
+::ng-deep .designation-prime-multiselect-panel {
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.16);
+}
+
+::ng-deep .designation-prime-multiselect-panel .p-multiselect-option {
+  min-height: 48px;
+}

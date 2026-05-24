@@ -1,0 +1,23 @@
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+
+import { AuthService } from '../services/auth.service';
+
+// Functional interceptor used by standalone Angular apps.
+// It automatically attaches the JWT token to outgoing API requests.
+export const authInterceptor: HttpInterceptorFn = (request, next) => {
+  const authService = inject(AuthService);
+  const token = authService.getAccessToken();
+
+  if (!token) {
+    return next(request);
+  }
+
+  return next(
+    request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
+  );
+};

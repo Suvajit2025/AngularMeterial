@@ -1,0 +1,40 @@
+<p-multiselect
+  [options]="employees()"
+  [ngModel]="selectedEmployees()"
+  (ngModelChange)="selectEmployees($event)"
+  optionLabel="label"
+  dataKey="empNo"
+  placeholder="Select employees"
+  filterPlaceHolder="Search employee"
+  filterBy="label,email,empNo"
+  emptyMessage="No employee found"
+  emptyFilterMessage="No employee found"
+  selectedItemsLabel="{0} employees selected"
+  scrollHeight="320px"
+  appendTo="body"
+  display="chip"
+  styleClass="employee-prime-multiselect"
+  panelStyleClass="employee-prime-multiselect-panel"
+  [filter]="true"
+  [showClear]="true"
+  [showToggleAll]="true"
+  [maxSelectedLabels]="3"
+  [virtualScroll]="true"
+  [virtualScrollItemSize]="58"
+>
+  <!-- PrimeNG item template keeps the list fast and visually rich. -->
+  <ng-template pTemplate="item" let-employee>
+    <span class="employee-option">
+      <img
+        [src]="employee.imageUrl"
+        [alt]="employee.label"
+        (error)="handleAvatarError($event, employee)"
+      />
+
+      <span class="employee-option-copy">
+        <strong>{{ employee.label }}</strong>
+        <small>{{ employee.email || 'Email not available' }}</small>
+      </span>
+    </span>
+  </ng-template>
+</p-multiselect>

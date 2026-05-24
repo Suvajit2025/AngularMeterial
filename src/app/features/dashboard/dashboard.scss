@@ -1,0 +1,249 @@
+.dashboard-shell {
+  /* Dashboard uses vertical spacing so sections remain scan-friendly. */
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dashboard-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.eyebrow,
+.summary,
+.metric-card p,
+.metric-card span,
+.panel p {
+  margin: 0;
+  color: #64748b;
+}
+
+.eyebrow {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0;
+  color: #0f172a;
+}
+
+h1 {
+  margin-top: 4px;
+  font-size: clamp(25px, 2.5vw, 34px);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.summary {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.heading-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.metrics-grid {
+  /* Responsive KPI grid: desktop gets four cards, smaller screens collapse below. */
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.metric-card,
+.panel {
+  /* Soft enterprise surface styling shared by cards and panels. */
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+
+.metric-card {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+}
+
+.metric-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.metric-card strong {
+  display: block;
+  margin-top: 6px;
+  color: #0f172a;
+  font-size: 23px;
+  line-height: 1;
+}
+
+.metric-card span {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 14px;
+}
+
+.panel {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.workflow-table {
+  width: 100%;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 10px;
+}
+
+.attention-list {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.attention-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #334155;
+  padding: 0 12px;
+}
+
+.attention-item mat-icon {
+  color: #2563eb;
+}
+
+.employee-picker-panel {
+  overflow: visible;
+}
+
+.employee-picker-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 16px;
+}
+
+.employee-picker-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.employee-picker-card h3 {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.selection-preview {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  min-height: 54px;
+  padding: 10px 12px;
+}
+
+.selection-preview strong,
+.selection-preview span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selection-preview strong {
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.selection-preview span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+@media (max-width: 1180px) {
+  /* Tablet layout avoids squeezed dashboard cards. */
+  .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .employee-picker-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  /* Mobile layout stacks actions and cards for readability. */
+  .dashboard-heading,
+  .heading-actions {
+    flex-direction: column;
+  }
+
+  .heading-actions,
+  .heading-actions button {
+    width: 100%;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}

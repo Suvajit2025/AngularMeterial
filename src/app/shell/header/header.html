@@ -1,0 +1,70 @@
+<mat-toolbar class="app-toolbar">
+  <!-- Left section: hamburger button, logo, and product name -->
+  <section class="toolbar-left">
+    <button mat-icon-button type="button" aria-label="Toggle navigation" (click)="toggleSidebar()">
+      <mat-icon>{{ sidebarCollapsed() ? 'menu_open' : 'menu' }}</mat-icon>
+    </button>
+
+    <div class="brand-mark" aria-hidden="true">E</div>
+
+    <div class="brand-copy">
+      <span class="app-name">Enterprise HRMS</span>
+      <span class="tenant-name">Global Operations</span>
+    </div>
+  </section>
+
+  <!-- Center section: responsive global search using Angular Material form field -->
+  <section class="toolbar-center">
+    <mat-form-field class="global-search" appearance="outline" subscriptSizing="dynamic">
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        type="search"
+        placeholder="Search employees, payroll, reports"
+        [value]="searchText()"
+        (input)="searchText.set($event.target.value)"
+      />
+      <button mat-icon-button matSuffix type="button" class="search-action" aria-label="Search">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </mat-form-field>
+  </section>
+
+  <!-- Right section: notifications and user menu -->
+  <section class="toolbar-right">
+    <button class="notification-button" type="button" [attr.aria-label]="notificationLabel()">
+      <mat-icon [matBadge]="notificationCount()" matBadgeColor="warn" matBadgeSize="small">
+        notifications
+      </mat-icon>
+    </button>
+
+    <button type="button" class="profile-button" [matMenuTriggerFor]="userMenu">
+      <span class="avatar">{{ user().initials }}</span>
+      <span class="profile-copy">
+        <span class="profile-name">{{ user().name }}</span>
+        <span class="profile-role">{{ user().role }}</span>
+      </span>
+      <mat-icon class="profile-arrow">expand_more</mat-icon>
+    </button>
+  </section>
+</mat-toolbar>
+
+<!-- User dropdown menu. Material menu handles keyboard and accessibility behavior. -->
+<mat-menu #userMenu="matMenu" xPosition="before">
+  <button mat-menu-item type="button">
+    <mat-icon>person</mat-icon>
+    <span>Profile</span>
+  </button>
+  <button mat-menu-item type="button">
+    <mat-icon>settings</mat-icon>
+    <span>Settings</span>
+  </button>
+  <button mat-menu-item type="button">
+    <mat-icon>lock_reset</mat-icon>
+    <span>Change Password</span>
+  </button>
+  <button mat-menu-item type="button">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>

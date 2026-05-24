@@ -1,0 +1,38 @@
+<p-select
+  [options]="designations()"
+  [ngModel]="selectedDesignation()"
+  (ngModelChange)="selectDesignation($event)"
+  optionLabel="name"
+  dataKey="designationId"
+  placeholder="Select designation"
+  filterPlaceholder="Search designation"
+  filterBy="name,designationId"
+  emptyMessage="No designation found"
+  emptyFilterMessage="No designation found"
+  appendTo="body"
+  styleClass="designation-prime-select"
+  panelStyleClass="designation-prime-panel"
+  [filter]="true"
+  [showClear]="true"
+  [virtualScroll]="true"
+  [virtualScrollItemSize]="44"
+>
+  <ng-template pTemplate="selectedItem" let-designation>
+    @if (designation) {
+      <span class="designation-selected-value">
+        <span class="designation-icon">{{ designation.name.charAt(0) }}</span>
+        <span>{{ designation.name }}</span>
+      </span>
+    }
+  </ng-template>
+
+  <ng-template pTemplate="item" let-designation>
+    <span class="designation-option">
+      <span class="designation-icon">{{ designation.name.charAt(0) }}</span>
+      <span class="designation-option-copy">
+        <strong>{{ designation.name }}</strong>
+        <small>ID: {{ designation.designationId }}</small>
+      </span>
+    </span>
+  </ng-template>
+</p-select>

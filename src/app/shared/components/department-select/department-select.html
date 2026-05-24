@@ -1,0 +1,38 @@
+<p-select
+  [options]="departments()"
+  [ngModel]="selectedDepartment()"
+  (ngModelChange)="selectDepartment($event)"
+  optionLabel="name"
+  dataKey="departmentId"
+  placeholder="Select department"
+  filterPlaceholder="Search department"
+  filterBy="name,departmentId"
+  emptyMessage="No department found"
+  emptyFilterMessage="No department found"
+  appendTo="body"
+  styleClass="department-prime-select"
+  panelStyleClass="department-prime-panel"
+  [filter]="true"
+  [showClear]="true"
+  [virtualScroll]="true"
+  [virtualScrollItemSize]="44"
+>
+  <ng-template pTemplate="selectedItem" let-department>
+    @if (department) {
+      <span class="department-selected-value">
+        <span class="department-icon">{{ department.name.charAt(0) }}</span>
+        <span>{{ department.name }}</span>
+      </span>
+    }
+  </ng-template>
+
+  <ng-template pTemplate="item" let-department>
+    <span class="department-option">
+      <span class="department-icon">{{ department.name.charAt(0) }}</span>
+      <span class="department-option-copy">
+        <strong>{{ department.name }}</strong>
+        <small>ID: {{ department.departmentId }}</small>
+      </span>
+    </span>
+  </ng-template>
+</p-select>

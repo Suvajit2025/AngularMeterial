@@ -1,0 +1,34 @@
+<p-multiselect
+  [options]="posts()"
+  [ngModel]="selectedPosts()"
+  (ngModelChange)="selectPosts($event)"
+  optionLabel="name"
+  dataKey="postId"
+  placeholder="Select posts"
+  filterPlaceHolder="Search post"
+  filterBy="name,postId"
+  emptyMessage="No post found"
+  emptyFilterMessage="No post found"
+  selectedItemsLabel="{0} posts selected"
+  scrollHeight="300px"
+  appendTo="body"
+  display="chip"
+  styleClass="post-prime-multiselect"
+  panelStyleClass="post-prime-multiselect-panel"
+  [filter]="true"
+  [showClear]="true"
+  [showToggleAll]="true"
+  [maxSelectedLabels]="3"
+  [virtualScroll]="true"
+  [virtualScrollItemSize]="48"
+>
+  <ng-template pTemplate="item" let-post>
+    <span class="post-option">
+      <span class="post-icon">{{ post.name.charAt(0) }}</span>
+      <span class="post-option-copy">
+        <strong>{{ post.name }}</strong>
+        <small>ID: {{ post.postId }}</small>
+      </span>
+    </span>
+  </ng-template>
+</p-multiselect>

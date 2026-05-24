@@ -1,0 +1,50 @@
+<p-select
+  [options]="employees()"
+  [ngModel]="selectedEmployee()"
+  (ngModelChange)="selectEmployee($event)"
+  optionLabel="label"
+  dataKey="empNo"
+  placeholder="Select employee"
+  filterPlaceholder="Search employee"
+  filterBy="label,email,empNo"
+  emptyMessage="No employee found"
+  emptyFilterMessage="No employee found"
+  appendTo="body"
+  styleClass="employee-prime-select"
+  panelStyleClass="employee-prime-panel"
+  [filter]="true"
+  [showClear]="true"
+  [virtualScroll]="true"
+  [virtualScrollItemSize]="54"
+>
+  <!-- Selected value template keeps avatar visible after selection. -->
+  <ng-template pTemplate="selectedItem" let-employee>
+    @if (employee) {
+      <span class="employee-selected-value">
+        <img
+          [src]="employee.imageUrl"
+          [alt]="employee.label"
+          (error)="handleAvatarError($event, employee)"
+        />
+
+        <span>{{ employee.label }}</span>
+      </span>
+    }
+  </ng-template>
+
+  <!-- Item template renders each option with employee avatar and email. -->
+  <ng-template pTemplate="item" let-employee>
+    <span class="employee-option">
+      <img
+        [src]="employee.imageUrl"
+        [alt]="employee.label"
+        (error)="handleAvatarError($event, employee)"
+      />
+
+      <span class="employee-option-copy">
+        <strong>{{ employee.label }}</strong>
+        <small>{{ employee.email || 'Email not available' }}</small>
+      </span>
+    </span>
+  </ng-template>
+</p-select>

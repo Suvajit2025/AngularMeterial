@@ -1,0 +1,43 @@
+/*
+  Global stylesheet purpose:
+  - Tailwind is imported from src/styles/tailwind.css.
+  - Component-specific UI styles stay inside each component SCSS file.
+  - Global styles should remain small in enterprise applications.
+*/
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  /* App-wide base scale: keeps the UI close to Chrome 90% while browser zoom remains 100%. */
+  font-size: 90%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: #f5f7fb;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.employee-detail-tooltip {
+  white-space: pre-line;
+}
+
+.employee-detail-tooltip .mdc-tooltip__surface {
+  background: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.55;
+  padding: 10px 12px;
+}

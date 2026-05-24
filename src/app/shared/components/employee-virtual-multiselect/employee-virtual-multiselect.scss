@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+:host ::ng-deep .employee-prime-multiselect {
+  min-height: 46px;
+  width: 100%;
+}
+
+:host ::ng-deep .employee-prime-multiselect.p-multiselect {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-color: #cbd5e1;
+  border-radius: 12px;
+  box-shadow:
+    0 10px 20px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.employee-option {
+  align-items: center;
+  display: flex;
+  gap: 2px;
+  min-width: 0;
+}
+
+.employee-option img {
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.16);
+  height: 34px;
+  object-fit: cover;
+  width: 34px;
+}
+
+.employee-option-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.employee-option-copy strong,
+.employee-option-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.employee-option-copy strong {
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.employee-option-copy small {
+  color: #64748b;
+  font-size: 10px;
+}
+
+::ng-deep .employee-prime-multiselect-panel {
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.16);
+}
+
+::ng-deep .employee-prime-multiselect-panel .p-multiselect-option {
+  min-height: 58px;
+}

@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/*
+  Tailwind entry file:
+  Keep Tailwind in plain CSS so Sass does not warn about deprecated @import syntax.
+*/

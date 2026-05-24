@@ -1,0 +1,66 @@
+<aside class="sidebar" [class.sidebar-collapsed]="collapsed()">
+  <!-- Sidebar brand area. Text hides in collapsed mode, but logo remains visible. -->
+  <div class="sidebar-header">
+    <div class="sidebar-logo" aria-hidden="true">E</div>
+    <div class="sidebar-brand-copy">
+      <span class="sidebar-title">Enterprise HRMS</span>
+      <span class="sidebar-caption">ERP workspace</span>
+    </div>
+  </div>
+
+  <!--
+    Recursive menu template:
+    - Data comes from TypeScript mock JSON, not hardcoded menu HTML.
+    - level controls child indentation.
+    - collapsed mode hides labels and child menus.
+  -->
+  <nav class="sidebar-nav" aria-label="Enterprise navigation">
+    <ng-container
+      *ngTemplateOutlet="menuList; context: { $implicit: visibleMenuItems(), level: 0 }"
+    />
+  </nav>
+</aside>
+
+<ng-template #menuList let-items let-level="level">
+  @for (item of items; track item.id) {
+    @if (hasChildren(item)) {
+      <button
+        type="button"
+        class="menu-row menu-parent"
+        [class.expanded]="isExpanded(item)"
+        [style.padding-left.px]="menuIndent(level)"
+        [matTooltip]="item.title"
+        matTooltipPosition="right"
+        [matTooltipShowDelay]="collapsed() ? 0 : 350"
+        (click)="toggleNode(item)"
+      >
+        <mat-icon class="menu-icon">{{ item.icon }}</mat-icon>
+        <span class="menu-label">{{ item.title }}</span>
+        <mat-icon class="menu-arrow">expand_more</mat-icon>
+      </button>
+
+      @if (isExpanded(item) && !collapsed()) {
+        <div class="submenu">
+          <ng-container
+            *ngTemplateOutlet="menuList; context: { $implicit: item.children, level: level + 1 }"
+          />
+        </div>
+      }
+    } @else {
+      <a
+        class="menu-row menu-leaf"
+        [routerLink]="item.route"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [style.padding-left.px]="menuIndent(level)"
+        [matTooltip]="item.title"
+        matTooltipPosition="right"
+        [matTooltipShowDelay]="collapsed() ? 0 : 350"
+      >
+        <mat-icon class="menu-icon">{{ item.icon }}</mat-icon>
+        <span class="menu-label">{{ item.title }}</span>
+        <span class="menu-arrow"></span>
+      </a>
+    }
+  }
+</ng-template>

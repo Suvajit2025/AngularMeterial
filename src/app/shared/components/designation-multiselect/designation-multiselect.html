@@ -1,0 +1,34 @@
+<p-multiselect
+  [options]="designations()"
+  [ngModel]="selectedDesignations()"
+  (ngModelChange)="selectDesignations($event)"
+  optionLabel="name"
+  dataKey="designationId"
+  placeholder="Select designations"
+  filterPlaceHolder="Search designation"
+  filterBy="name,designationId"
+  emptyMessage="No designation found"
+  emptyFilterMessage="No designation found"
+  selectedItemsLabel="{0} designations selected"
+  scrollHeight="300px"
+  appendTo="body"
+  display="chip"
+  styleClass="designation-prime-multiselect"
+  panelStyleClass="designation-prime-multiselect-panel"
+  [filter]="true"
+  [showClear]="true"
+  [showToggleAll]="true"
+  [maxSelectedLabels]="3"
+  [virtualScroll]="true"
+  [virtualScrollItemSize]="48"
+>
+  <ng-template pTemplate="item" let-designation>
+    <span class="designation-option">
+      <span class="designation-icon">{{ designation.name.charAt(0) }}</span>
+      <span class="designation-option-copy">
+        <strong>{{ designation.name }}</strong>
+        <small>ID: {{ designation.designationId }}</small>
+      </span>
+    </span>
+  </ng-template>
+</p-multiselect>

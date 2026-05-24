@@ -1,0 +1,179 @@
+<section class="org-page">
+  <!-- Page header gives users context before the large hierarchy canvas. -->
+  <header class="page-header">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span>HRMS</span>
+        <mat-icon>chevron_right</mat-icon>
+        <span>Organization</span>
+      </nav>
+
+      <h1>Organization Hierarchy</h1>
+      <p>
+        Horizontal reporting structure for leaders, managers, and employees.
+      </p>
+    </div>
+
+    <!-- Toolbar actions are placeholders for real enterprise functions like PDF export/fullscreen. -->
+    <div class="header-actions">
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="exportPdf()"
+        [disabled]="exporting()"
+        matTooltip="Export organization hierarchy as PDF"
+      >
+        <mat-icon>{{ exporting() ? 'hourglass_top' : 'download' }}</mat-icon>
+        {{ exporting() ? 'Exporting...' : 'Export PDF' }}
+      </button>
+
+      <button mat-flat-button color="primary" type="button" matTooltip="Fullscreen placeholder">
+        <mat-icon>fullscreen</mat-icon>
+        Fullscreen
+      </button>
+    </div>
+  </header>
+
+  <!-- Summary cards help users understand the hierarchy before exploring the chart. -->
+  <section class="summary-grid" aria-label="Organization summary">
+    <article class="summary-card">
+      <mat-icon>groups</mat-icon>
+      <div>
+        <span>Total Employees</span>
+        <strong>{{ employeeCount() }}</strong>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <mat-icon>account_tree</mat-icon>
+      <div>
+        <span>Reporting Lines</span>
+        <strong>{{ managerCount() }}</strong>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <mat-icon>manage_search</mat-icon>
+      <div>
+        <span>Search Matches</span>
+        <strong>{{ matchedCount() }}</strong>
+      </div>
+    </article>
+  </section>
+
+  <section class="chart-panel screenshot-style">
+    <!-- Chart toolbar contains search, zoom, and expand/collapse controls. -->
+    <div class="chart-toolbar">
+      <mat-form-field appearance="outline" class="employee-search">
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="search"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="updateSearch($event)"
+          placeholder="Search employee, designation, or code"
+        />
+      </mat-form-field>
+
+      <div class="chart-actions" aria-label="Organization chart actions">
+        <button mat-icon-button type="button" (click)="zoomOut()" matTooltip="Zoom out">
+          <mat-icon>remove</mat-icon>
+        </button>
+
+        <button mat-stroked-button type="button" (click)="resetZoom()">
+          {{ (zoomLevel() * 100).toFixed(0) }}%
+        </button>
+
+        <button mat-icon-button type="button" (click)="zoomIn()" matTooltip="Zoom in">
+          <mat-icon>add</mat-icon>
+        </button>
+
+        <button mat-stroked-button type="button" (click)="expandAll()">
+          <mat-icon>unfold_more</mat-icon>
+          Expand All
+        </button>
+
+        <button mat-stroked-button type="button" (click)="collapseAll()">
+          <mat-icon>unfold_less</mat-icon>
+          Collapse All
+        </button>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <mat-icon>hourglass_top</mat-icon>
+        Loading organization hierarchy...
+      </div>
+    } @else {
+      <!-- Horizontal scroll keeps large enterprise hierarchies usable on laptop and tablet screens. -->
+      <div class="chart-scroll-shell">
+        <div class="export-frame" #exportArea>
+          <div
+            class="chart-canvas"
+            [style.transform]="chartScale()"
+            [style.--tree-depth]="treeDepth()"
+          >
+          <div class="horizontal-tree" aria-label="Horizontal organization hierarchy">
+            @for (root of organizationNodes(); track root.key) {
+              <ng-container
+                [ngTemplateOutlet]="nodeTemplate"
+                [ngTemplateOutletContext]="{ $implicit: root, level: 0 }"
+              />
+            }
+          </div>
+          </div>
+        </div>
+      </div>
+    }
+  </section>
+</section>
+
+<!-- Recursive template renders one employee and then renders that employee's children. -->
+<ng-template #nodeTemplate let-node let-level="level">
+  <div class="tree-row" [class.has-children]="node.children.length && node.expanded">
+    <article
+      class="employee-card"
+      [class.search-match]="isSearchMatch(node)"
+      [style.--level-color]="levelColor(level)"
+      [matTooltip]="node.data.tooltip.text"
+      matTooltipClass="employee-detail-tooltip"
+      matTooltipPosition="above"
+    >
+      <img
+        [src]="node.data.image"
+        [alt]="node.data.name"
+        class="employee-avatar"
+        (error)="handleAvatarError($event, node.data.name)"
+      />
+
+      <div class="employee-details">
+        <div class="employee-name">{{ node.data.name }}</div>
+        <div class="employee-designation">{{ node.data.designation }}</div>
+      </div>
+
+      @if (node.children.length) {
+        <button
+          mat-icon-button
+          type="button"
+          class="node-toggle"
+          (click)="toggleNode(node)"
+          [matTooltip]="node.expanded ? 'Collapse team' : 'Expand team'"
+        >
+          <mat-icon>{{ node.expanded ? 'remove' : 'add' }}</mat-icon>
+        </button>
+      }
+    </article>
+
+    @if (node.children.length && node.expanded) {
+      <div class="child-group">
+        @for (child of node.children; track child.key) {
+          <ng-container
+            [ngTemplateOutlet]="nodeTemplate"
+            [ngTemplateOutletContext]="{ $implicit: child, level: level + 1 }"
+          />
+        }
+      </div>
+    }
+  </div>
+</ng-template>
