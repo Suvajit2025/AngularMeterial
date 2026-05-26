@@ -1,15 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
 import { DepartmentLookupApi, DepartmentLookupOption } from '../models/department-lookup.model';
 import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class DepartmentLookupService {
+  // ApiService is used for calling backend APIs.
   private readonly api = inject(ApiService);
 
-  private readonly tenantId = environment.tenantId;
+  // AuthService gives tenant id from local storage.
+  private readonly authService = inject(AuthService);
 
   // Department lists are shared across many pages, so we cache the first API response.
   private readonly departments$ = this.loadDepartments().pipe(
@@ -22,17 +24,22 @@ export class DepartmentLookupService {
   }
 
   private loadDepartments(): Observable<DepartmentLookupOption[]> {
+    // Get tenant id from local storage before calling the API.
+    const tenantId = this.authService.getTenantId();
+
     return this.api
       .get<DepartmentLookupApi[] | { data?: DepartmentLookupApi[]; Data?: DepartmentLookupApi[] }>(
         '/api/centralizedAPI/DepartmentList',
-        { params: { tenantId: this.tenantId } },
+        { params: { tenantId } },
       )
       .pipe(
         map((response) => {
+          // API can return direct array or wrapped data.
           const departments = Array.isArray(response)
             ? response
             : response.data ?? response.Data ?? [];
 
+          // Convert API data into dropdown options.
           return departments.map((department) => this.toOption(department));
         }),
         // Empty fallback keeps forms stable if API/CORS/network is temporarily unavailable.
@@ -41,6 +48,7 @@ export class DepartmentLookupService {
   }
 
   private toOption(department: DepartmentLookupApi): DepartmentLookupOption {
+    // Keep only the fields needed by the dropdown.
     return {
       departmentId: department.IDDepartment,
       name: department.Name,

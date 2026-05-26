@@ -5,6 +5,7 @@ import { LayoutComponent } from './shell/layout/layout';
 import { MenuItem } from './shell/models/menu-item.model';
 import { ENTERPRISE_MENU_ITEMS } from './shell/models/menu.mock';
 import { AUTH_ROUTES } from './features/auth/auth.routes';
+import { authChildGuard, authGuard } from './core/guards/auth.guard';
 
 type MenuComponentLoader = () => Promise<Type<unknown>>;
 
@@ -60,6 +61,8 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    canActivate: [authGuard],
+    canActivateChild: [authChildGuard],
     children: [
       {
         path: '',

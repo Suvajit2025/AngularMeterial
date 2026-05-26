@@ -71,6 +71,8 @@ export class AuthService {
   private readonly storage = inject(AUTH_TOKEN_STORAGE);
   private readonly tokenKey = 'enterprise_hrms_access_token';
   private readonly sessionKey = 'enterprise_hrms_user_session';
+  // This key is used to save and read tenant id from local storage.
+  private readonly tenantIdKey = 'tenantId';
   private readonly companyId = 24;
   private readonly loginUrl = '/sales-api/api/Emp/companyidlogin';
 
@@ -148,11 +150,27 @@ export class AuthService {
     }
   }
 
+  isAuthenticated(): boolean {
+    const session = this.getUserSession();
+    const details = session?.userDetails?.[0];
+
+    return Boolean(session?.email && details?.EmpNo && details?.TenantID);
+  }
+
   private persistLoginSession(request: LoginRequest, session: AuthenticatedUserSession): void {
+    // Tenant id comes from user details after login.
+    const tenantId = session.userDetails?.[0]?.TenantID;
+
+    // Save basic login data in local storage.
     this.storage.setItem('email', request.email);
     this.storage.setItem('password', request.password);
     this.storage.setItem('companyId', this.companyId.toString());
     this.storage.setItem(this.sessionKey, JSON.stringify(session));
+
+    // Save tenant id separately so all lookup services can use it.
+    if (tenantId) {
+      this.storage.setItem(this.tenantIdKey, tenantId);
+    }
 
     if (request.rememberMe) {
       this.storage.setItem('rememberMe', 'true');
@@ -168,6 +186,11 @@ export class AuthService {
 
   getCompanyId(): number {
     return this.companyId;
+  }
+
+  getTenantId(): string {
+    // Return tenant id from local storage.
+    return this.storage.getItem(this.tenantIdKey) || '';
   }
 
   getUserDetails(email: string): Observable<UserDetailsResponse[]> {
@@ -196,11 +219,13 @@ export class AuthService {
   }
 
   logout(): void {
+    // Clear all login related data from local storage.
     this.storage.removeItem(this.tokenKey);
     this.storage.removeItem(this.sessionKey);
     this.storage.removeItem('email');
     this.storage.removeItem('password');
     this.storage.removeItem('companyId');
+    this.storage.removeItem(this.tenantIdKey);
   }
 
   private createLoginError(error: unknown): Error {

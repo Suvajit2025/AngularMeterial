@@ -1,15 +1,17 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
 import { EmployeeLookupApi, EmployeeLookupOption } from '../models/employee-lookup.model';
 import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeLookupService {
+  // ApiService is used for calling backend APIs.
   private readonly api = inject(ApiService);
-  private readonly tenantId = environment.tenantId;
+
+  // AuthService gives tenant id from local storage.
+  private readonly authService = inject(AuthService);
 
   // shareReplay caches the employee list after the first API call.
   // This is useful because many pages may need the same employee dropdown.
@@ -21,18 +23,22 @@ export class EmployeeLookupService {
   }
 
   private loadEmployees(): Observable<EmployeeLookupOption[]> {
-     
+    // Get tenant id from local storage before calling the API.
+    const tenantId = this.authService.getTenantId();
+
     return this.api
       .get<EmployeeLookupApi[] | { data?: EmployeeLookupApi[]; Data?: EmployeeLookupApi[] }>(
         '/api/centralizedAPI/EmployeeList',
-        { params: { tenantId: this.tenantId } },
+        { params: { tenantId } },
       )
       .pipe(
         map((response) => {
+          // API can return direct array or wrapped data.
           const employees = Array.isArray(response)
             ? response
             : response.data ?? response.Data ?? [];
 
+          // Convert API data into dropdown options.
           return employees.map((employee) => this.toOption(employee));
         }),
         // If API/CORS/network fails, keep the UI stable with an empty list.
@@ -41,8 +47,10 @@ export class EmployeeLookupService {
   }
 
   private toOption(employee: EmployeeLookupApi): EmployeeLookupOption {
+    // Use employee name when available, otherwise show employee number.
     const employeeName = employee.Employee || String(employee.empno);
 
+    // Keep only the fields needed by employee dropdowns.
     return {
       empId: employee.EmpID,
       empNo: employee.empno,
@@ -63,10 +71,12 @@ export class EmployeeLookupService {
   }
 
   private getAvatarUrl(employeeName: string): string {
+    // Create a default avatar when employee photo is not available.
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(employeeName)}&background=2563eb&color=ffffff&bold=true`;
   }
 
   private getInitials(employeeName: string): string {
+    // Make short initials from the employee name.
     return employeeName
       .replace(/-\d+$/, '')
       .split(' ')

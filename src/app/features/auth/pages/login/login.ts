@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../../core/services/auth.service';
@@ -16,6 +16,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 export class LoginComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   protected readonly logoUrl =
     'https://iehrms.iecsl.in/Register/IehrmsLogin/img/ie-hrms-logo.png';
@@ -67,7 +68,7 @@ export class LoginComponent {
         }),
       );
 
-      await this.router.navigateByUrl('/dashboard');
+      await this.router.navigateByUrl(this.getReturnUrl());
     } catch (error) {
       const message = error instanceof Error ? error.message : 'An error occurred';
       this.errorMessage.set(message);
@@ -75,5 +76,15 @@ export class LoginComponent {
     } finally {
       this.isLoading.set(false);
     }
+  }
+
+  private getReturnUrl(): string {
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+
+    if (!returnUrl || returnUrl === '/login' || !returnUrl.startsWith('/')) {
+      return '/dashboard';
+    }
+
+    return returnUrl;
   }
 }

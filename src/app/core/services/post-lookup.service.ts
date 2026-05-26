@@ -1,15 +1,17 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, catchError, map, of, shareReplay } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
 import { PostLookupApi, PostLookupOption } from '../models/post-lookup.model';
 import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
+
 @Injectable({ providedIn: 'root' })
 export class PostLookupService {
+  // ApiService is used for calling backend APIs.
   private readonly api = inject(ApiService);
- 
-  private readonly tenantId = environment.tenantId;
+
+  // AuthService gives tenant id from local storage.
+  private readonly authService = inject(AuthService);
 
   // Post lookup data is shared across forms, so cache the first API response.
   private readonly posts$ = this.loadPosts().pipe(shareReplay({ bufferSize: 1, refCount: true }));
@@ -20,18 +22,22 @@ export class PostLookupService {
   }
 
   private loadPosts(): Observable<PostLookupOption[]> {
-    
+    // Get tenant id from local storage before calling the API.
+    const tenantId = this.authService.getTenantId();
+
     return this.api
       .get<PostLookupApi[] | { data?: PostLookupApi[]; Data?: PostLookupApi[] }>(
         '/api/centralizedAPI/SOPPostList',
-        { params: { tenantId: this.tenantId } },
+        { params: { tenantId } },
       )
       .pipe(
         map((response) => {
+          // API can return direct array or wrapped data.
           const posts = Array.isArray(response)
             ? response
             : response.data ?? response.Data ?? [];
 
+          // Convert API data into dropdown options.
           return posts.map((post) => this.toOption(post));
         }),
         // Empty fallback keeps forms stable if API/CORS/network is temporarily unavailable.
@@ -40,6 +46,7 @@ export class PostLookupService {
   }
 
   private toOption(post: PostLookupApi): PostLookupOption {
+    // Keep only the fields needed by the dropdown.
     return {
       postId: post.IDPost,
       name: post.Name,
