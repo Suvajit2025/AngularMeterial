@@ -24,6 +24,7 @@ export interface UserDetailsResponse {
   EmpEmail?: string;
   Department?: string;
   RoleName?: string;
+  IDRole?: number | string;
   postname?: string;
   DesignationName?: string;
   Imagename?: string | Record<string, never>;
@@ -73,6 +74,8 @@ export class AuthService {
   private readonly sessionKey = 'enterprise_hrms_user_session';
   // This key is used to save and read tenant id from local storage.
   private readonly tenantIdKey = 'tenantId';
+  // This key is used to save and read role id from local storage.
+  private readonly roleIdKey = 'IDRole';
   private readonly companyId = 24;
   private readonly loginUrl = '/sales-api/api/Emp/companyidlogin';
 
@@ -160,6 +163,8 @@ export class AuthService {
   private persistLoginSession(request: LoginRequest, session: AuthenticatedUserSession): void {
     // Tenant id comes from user details after login.
     const tenantId = session.userDetails?.[0]?.TenantID;
+    // Role id is needed for menu permission APIs.
+    const roleId = session.userDetails?.[0]?.IDRole;
 
     // Save basic login data in local storage.
     this.storage.setItem('email', request.email);
@@ -170,6 +175,11 @@ export class AuthService {
     // Save tenant id separately so all lookup services can use it.
     if (tenantId) {
       this.storage.setItem(this.tenantIdKey, tenantId);
+    }
+
+    // Save role id separately so sidebar menu APIs can use it.
+    if (roleId) {
+      this.storage.setItem(this.roleIdKey, String(roleId));
     }
 
     if (request.rememberMe) {
@@ -191,6 +201,17 @@ export class AuthService {
   getTenantId(): string {
     // Return tenant id from local storage.
     return this.storage.getItem(this.tenantIdKey) || '';
+  }
+
+  getRoleId(): string {
+    // Return role id from local storage.
+    // 10193 is used as fallback because this is the role id from the provided API sample.
+    return this.storage.getItem(this.roleIdKey) || '10193';
+  }
+
+  getUserEmail(): string {
+    // Return logged in user email from local storage.
+    return this.storage.getItem('email') || '';
   }
 
   getUserDetails(email: string): Observable<UserDetailsResponse[]> {
@@ -226,6 +247,7 @@ export class AuthService {
     this.storage.removeItem('password');
     this.storage.removeItem('companyId');
     this.storage.removeItem(this.tenantIdKey);
+    this.storage.removeItem(this.roleIdKey);
   }
 
   private createLoginError(error: unknown): Error {
