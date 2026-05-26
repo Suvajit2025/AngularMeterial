@@ -1,0 +1,11 @@
+{
+  "/sales-api": {
+    "target": "https://salesapi.mendine.co.in",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/sales-api": ""
+    }
+  }
+}

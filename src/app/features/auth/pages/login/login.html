@@ -1,0 +1,80 @@
+<main class="login-page">
+  <section class="login-card" aria-label="IE HRMS login">
+    <aside class="brand-panel">
+      <div class="brand-copy">
+        <h1>Empower Your Workforce</h1>
+        <p>Elevate Your Business</p>
+      </div>
+
+      <img class="workforce-graphic" [src]="workforceImageUrl" alt="" aria-hidden="true" />
+
+      <div class="tagline">
+        <span></span>
+        <p>AI-Powered HR for the Future of Work.</p>
+      </div>
+    </aside>
+
+    <section class="form-panel">
+      <img class="logo" [src]="logoUrl" alt="ieHRMS" />
+
+      <form class="login-form" (ngSubmit)="handleLogin()">
+        <h2>User Login</h2>
+
+        <label class="field">
+          <span>User Name</span>
+          <input
+            type="email"
+            name="userName"
+            autocomplete="username"
+            [ngModel]="userName()"
+            (ngModelChange)="userName.set($event)"
+          />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <div class="password-control">
+            <input
+              [type]="showPassword() ? 'text' : 'password'"
+              name="password"
+              autocomplete="current-password"
+              [ngModel]="password()"
+              (ngModelChange)="password.set($event)"
+            />
+            <button
+              type="button"
+              class="icon-button"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+              (click)="togglePasswordVisibility()"
+            >
+              <mat-icon>{{ showPassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </button>
+          </div>
+        </label>
+
+        <div class="form-options">
+          <label class="remember-control">
+            <input
+              type="checkbox"
+              name="rememberMe"
+              [ngModel]="rememberMe()"
+              (ngModelChange)="rememberMe.set($event)"
+            />
+            <span>Remember me</span>
+          </label>
+
+          <a href="#">Forgot Password?</a>
+        </div>
+
+        @if (errorMessage()) {
+          <p class="error-message">{{ errorMessage() }}</p>
+        }
+
+        <button class="login-button" type="submit" [disabled]="isLoading()">
+          {{ isLoading() ? 'Logging in...' : 'Log In' }}
+        </button>
+        <button class="signup-button" type="button">Sign up</button>
+      </form>
+    </section>
+  </section>
+</main>

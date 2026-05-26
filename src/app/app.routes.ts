@@ -4,6 +4,7 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './shell/layout/layout';
 import { MenuItem } from './shell/models/menu-item.model';
 import { ENTERPRISE_MENU_ITEMS } from './shell/models/menu.mock';
+import { AUTH_ROUTES } from './features/auth/auth.routes';
 
 type MenuComponentLoader = () => Promise<Type<unknown>>;
 
@@ -14,6 +15,7 @@ const implementedMenuComponents: Partial<Record<string, MenuComponentLoader>> = 
     import('./features/organization/org-chart/org-chart').then(
       (component) => component.OrgChartComponent,
     ),
+  profile: () => import('./features/profile/profile').then((component) => component.ProfileComponent),
 };
 
 function normalizeRoutePath(route: string): string {
@@ -54,6 +56,7 @@ function createRoutesFromMenu(items: MenuItem[], parentTitle = ''): Routes {
 // - Sidebar leaf routes are generated from menu data so navigation stays in one source.
 // - Implemented menu pages are lazy loaded; unfinished pages use a shared placeholder.
 export const routes: Routes = [
+  ...AUTH_ROUTES,
   {
     path: '',
     component: LayoutComponent,
@@ -62,6 +65,15 @@ export const routes: Routes = [
         path: '',
         pathMatch: 'full',
         redirectTo: 'dashboard',
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile').then((component) => component.ProfileComponent),
+        data: {
+          icon: 'person',
+          title: 'Profile',
+        },
       },
       ...createRoutesFromMenu(ENTERPRISE_MENU_ITEMS),
     ],

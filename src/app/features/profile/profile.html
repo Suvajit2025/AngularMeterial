@@ -1,0 +1,45 @@
+<section class="profile-page">
+  <div class="profile-hero">
+    <div class="avatar-frame">
+      <img [src]="avatarUrl()" [alt]="displayName()" />
+    </div>
+
+    <div class="profile-heading">
+      <p>Employee Profile</p>
+      <h1>{{ displayName() }}</h1>
+      <span>{{ roleTitle() }}</span>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="message error-message">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="message">
+      <mat-icon>sync</mat-icon>
+      <span>Loading official information...</span>
+    </div>
+  }
+
+  <section class="profile-panel">
+    <div class="panel-heading">
+      <div>
+        <h2>Official Information</h2>
+        <p>Details loaded from centralized HRMS official information API</p>
+      </div>
+    </div>
+
+    <div class="details-grid">
+      @for (row of profileRows(); track row.label) {
+        <div class="detail-item">
+          <span>{{ row.label }}</span>
+          <strong>{{ row.value }}</strong>
+        </div>
+      }
+    </div>
+  </section>
+</section>

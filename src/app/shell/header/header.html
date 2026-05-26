@@ -39,7 +39,13 @@
     </button>
 
     <button type="button" class="profile-button" [matMenuTriggerFor]="userMenu">
-      <span class="avatar">{{ user().initials }}</span>
+      <span class="avatar">
+        @if (user().avatarUrl) {
+          <img [src]="user().avatarUrl" [alt]="user().name" />
+        } @else {
+          {{ user().initials }}
+        }
+      </span>
       <span class="profile-copy">
         <span class="profile-name">{{ user().name }}</span>
         <span class="profile-role">{{ user().role }}</span>
@@ -51,7 +57,7 @@
 
 <!-- User dropdown menu. Material menu handles keyboard and accessibility behavior. -->
 <mat-menu #userMenu="matMenu" xPosition="before">
-  <button mat-menu-item type="button">
+  <button mat-menu-item type="button" (click)="openProfile()">
     <mat-icon>person</mat-icon>
     <span>Profile</span>
   </button>
@@ -63,7 +69,7 @@
     <mat-icon>lock_reset</mat-icon>
     <span>Change Password</span>
   </button>
-  <button mat-menu-item type="button">
+  <button mat-menu-item type="button" (click)="logout()">
     <mat-icon>logout</mat-icon>
     <span>Logout</span>
   </button>
